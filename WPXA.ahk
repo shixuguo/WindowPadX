@@ -148,10 +148,11 @@ wp_GetMouseAt( default=1)
     ; Iterate through all monitors.
     CoordMode, Mouse, Screen
     MouseGetPos, OutputVarX,OutputVarY
+    ; MsgBox %m%.'x'.%OutputVarX%.'y'.%OutputVarY%
     Loop, %m%
     {   ; Check if the window is on this monitor.
         SysGet, Mon, Monitor, %A_Index%
-        if (OutputVarX >= OutputVarX && x <= MonRight && OutputVarY >= MonTop && OutputVarY <= MonBottom)
+        if (OutputVarX >= MonLeft && OutputVarX <= MonRight && OutputVarY >= MonTop && OutputVarY <= MonBottom)
             return A_Index
     }
 
@@ -1256,8 +1257,9 @@ Author(s):
 WPXA_MoveMouseToMonitor(md)
 {
     SysGet, mc, MonitorCount
-
+    
     ms := wp_GetMouseAt()
+    ; MsgBox %mc%.'ms'.%ms%
 
     if md in ,N,Next
     {
