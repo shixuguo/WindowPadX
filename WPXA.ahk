@@ -127,6 +127,39 @@ wp_GetMonitorAt(x, y, default=1)
 
 /*
 ===============================================================================
+Function:   wp_GetMouseAt
+    Get the index of the Mouse containing the specified x and y coordinates.
+
+Parameters:
+    x,y - Coordinates
+    default - Default monitor
+  
+Returns:
+   Index of the monitor at specified coordinates
+
+Author(s):
+    shixuguo
+    Original - Lexikos - http://www.autohotkey.com/forum/topic21703.html
+===============================================================================
+*/
+wp_GetMouseAt( default=1)
+{
+    SysGet, m, MonitorCount
+    ; Iterate through all monitors.
+    CoordMode, Mouse, Screen
+    MouseGetPos, OutputVarX,OutputVarY
+    Loop, %m%
+    {   ; Check if the window is on this monitor.
+        SysGet, Mon, Monitor, %A_Index%
+        if (OutputVarX >= OutputVarX && x <= MonRight && OutputVarY >= MonTop && OutputVarY <= MonBottom)
+            return A_Index
+    }
+
+    return default
+}
+
+/*
+===============================================================================
 Function:   wp_GetMonitorFromMouse
     Get the index of the monitor where the mouse is
 
@@ -392,7 +425,7 @@ wp_Restore() {
     WinGet, id, list, , , Program Manager
     Loop, %id%
     {
-        ; Aktionen rückhängig ...
+        ; Aktionen rï¿½ckhï¿½ngig ...
         hwnd := id%A_Index%
         WinGetTitle, WinTitle, ahk_id %hwnd%
         
@@ -1223,6 +1256,22 @@ Author(s):
 WPXA_MoveMouseToMonitor(md)
 {
     SysGet, mc, MonitorCount
+
+    ms := wp_GetMouseAt()
+
+    if md in ,N,Next
+    {
+        md := ms+1
+        if (md > mc)
+            md := 1
+    }
+    else if md in P,Prev,Previous
+    {
+        md := ms-1
+        if (md < 1)
+            md := mc
+    }
+
     if (md<1 or md>mc)
         return
     
@@ -1239,7 +1288,7 @@ WPXA_MoveMouseToMonitor(md)
     
     CoordMode, Mouse, Screen
     MouseMove, mdxc, mdyc, 0
-    WPXA_MouseLocator()
+    ; WPXA_MouseLocator()
 }
 
 
